@@ -1,0 +1,149 @@
+<?php
+/*FormGen Module : Custom for Drupal Core 7.X */
+
+function formgen_permission()
+{
+	return array(
+   	'access form' => array(
+      	'title' => t('Access Form Generator'),
+      	'description' => t('Basic Registration Form Generator'),
+    ),
+  );
+
+}
+
+
+function formgen_menu()
+{
+	
+	$items = array();
+	$items['formgen/form'] = array('title' => t('FormGenerator for Drupal 7.x'),
+	'page callback' => 'formgen_form',
+	'access arguements' => array('access content'),
+	'description' => t('FormGen DrupalMod'),
+	'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+	);
+	return $items;
+	
+}
+
+function formgen_form()
+{
+	
+	return drupal_get_form('formgen_form1');
+	}
+	
+
+function formgen_form1($form_state)
+{
+	
+	$ndate = '01-01-1970';
+
+
+
+	 $form['id'] = array(
+    '#type' => 'hidden',
+    '#title' => t('User Id'),
+    '#default_value' => $default_entry->id,
+  );
+	$form['fname'] = array(
+	'#type' =>'textfield',
+	'#title' => t('First Name'),
+	'#required' => TRUE,
+	);
+
+
+
+	$form['email'] = array(
+	'#type' => 'textfield',
+	'#title' => t('E-Mail'),
+	'#required' => TRUE,
+	);
+
+	$form['pass'] = array(
+	'#type' => 'password',
+	'#title' => t('Password'),
+	'#required' => TRUE,
+	);
+
+	
+	$form['gender'] = array(
+	'#type' => 'radios',/*radio will generate only one radio btn , while radios will generate as per req.*/
+	'#title' => t('Gender'),
+	'#required' => TRUE,
+	'#options' => array('Male' => t('Male'),'Female' => t('Female'),
+	)
+	);
+
+
+	$form['dob'] = array(
+	'#type' => 'date_popup',
+	'#format' => 'D-m-y',
+	'#datepicker' => 'datepicker',/*enables calender when clicked in the field*/
+	'#default_value' => $ndate,
+	'#date_year_range' => '-70:+20', /*range from current past and coming - => shows past while other is upcoming in years*/
+	'#title' => t('DOB'),
+	);
+	/*print_r($user);	*/
+	
+
+	$form['submit'] = array(
+	'#type' => 'submit',
+	'#value' => 'Submit',
+	);
+	return $form;
+	}
+	
+
+function formgen_form1_submit($form, &$form_state)
+{
+	
+	$f = $form;
+	$fs = &$form_state;
+	
+	custom_submit($f,$fs);
+	drupal_set_message(t('The Form has been submitted!'));
+	
+	
+
+function custom_insert($entry)
+{
+	  
+	try{
+	$return_value = db_insert('custom_reg')
+			->fields($entry)
+			->execute();
+	}
+
+	catch(Exception $e)
+	{
+		drupal_set_message(t('db_insert failed. Message = %message, query= %query',
+		array('%message' => $e->getMessage(), '%query' => $e->query_string)), 'error');
+	}
+ 		return $return_value;
+}
+
+
+function custom_submit($form, &$form_state)
+{
+	
+	$entry = array(
+	'fname' => $form_state['values']['fname'],
+	'email' => $form_state['values']['email'],
+	'password' => $form_state['values']['pass'],
+	'gender' => $form_state['values']['gender'],
+	'dob' => $form_state['values']['dob'],
+	);
+
+	$return_value = custom_insert($entry);
+	drupal_set_message(t("Inserted @entry (@count row updated)",
+   	array('@count' => $entry, '@entry' => print_r($entry, TRUE))));
+
+
+}
+
+
+
+
+ 

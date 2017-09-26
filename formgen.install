@@ -1,0 +1,41 @@
+<?php
+/*
+Schema Generator for module FormGen
+Version : 7.x-1.x-dev
+*/
+function formgen_uninstall(){
+drupal_uninstall_schema('tableofformgen');
+}
+
+function formgen_schema()
+{
+	$schema['testtable'] = array(
+	'description' => 'Testing Install Schema for FormGen',
+	'fields' => array(
+	'id' => array(
+	'type' => 'serial',
+	'not null' => TRUE,
+	'size' => 'big',
+	'description' => 'Primary Key',
+	),
+	'name' => array(
+	'type' => 'varchar',
+	'length' => 30,
+	'not null' => TRUE,
+	'default' => 'A Man',
+	'description' => 'SomeText',
+	),
+	'house' => array(
+	'type' => 'varchar',
+	'length' => 30,
+	'default' => 'SomeText',
+	'description' => 'SomeText',
+	),
+	),
+	'primary key' => array('id'),
+	);
+	return $schema;
+}
+
+?>
+ 

@@ -1,0 +1,5 @@
+name = FormGen
+description = Form Generator Module for Drupal 7.x
+version = 7.x-1.x-dev
+core = 7.x
+ 
